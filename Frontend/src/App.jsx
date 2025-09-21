@@ -9,86 +9,90 @@ import Login from "./Pages/Login";
 import ProtectedRoute from "../ProtectRoute/ProtectRoute";
 import TotalNotes from "./Components/TotalNotes";
 import useUserStore from "./Store/UseUserStore";
-import { SyncLoader } from "react-spinners"
 import LoadingEffects from "./Components/LoadingEffects";
 import NotesDetails from "./Pages/NotesDetails";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   const location = useLocation();
   const hideLayout = location.pathname === "/create";
 
-
-
-  // ✅ Zustand store destructure
   const { error, fetchUsers, loading, users } = useUserStore();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // ✅ Check user auth with backend
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers])
-  
-  // setuserLength(users.user.notes)
-  // setTimeout(() => {
-    
-    // }, 3000);
- 
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('https://noteapp-fullstack-6ksr.onrender.com/check-auth', {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error('Network error');
+        const data = await res.json();
+        setAuthenticated(data.authenticated);
+        if (data.authenticated) {
+          fetchUsers(); // Only call fetchUsers if authenticated
+        }
+      } catch (err) {
+        console.error("Auth check failed:", err);
+        setAuthenticated(false);
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+    checkAuth();
+  }, [fetchUsers]);
 
-  
-
-  
-
+  if (checkingAuth) return <LoadingEffects />; // Wait till auth check is done
 
   return (
     <>
-{
-  loading?<LoadingEffects/>:  <div className="flex items-center justify-center w-screen ">
-      <div className="overflow-x-hidden scrollbar-hide md:w-[95%] w-full h-[100vh] background text-white flex flex-col">
-        <Routes>
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+      <div className="flex items-center justify-center w-screen ">
+        <div className="overflow-x-hidden scrollbar-hide md:w-[95%] w-full h-[100vh] background text-white flex flex-col">
+          <Routes>
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                {!hideLayout && <Navbar />}
-              {
-  users?.user?.notes.length===0?(!hideLayout && <HaveNotNotes/>) 
-    : (!hideLayout && <TotalNotes />)
-}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  {!hideLayout && <Navbar />}
+                  {authenticated && (
+                    users?.user?.notes.length === 0
+                      ? (!hideLayout && <HaveNotNotes />)
+                      : (!hideLayout && <TotalNotes />)
+                  )}
+                  {!hideLayout && <PlusIcon />}
+                </ProtectedRoute>
+              }
+            />
 
-                
-                {!hideLayout && <PlusIcon />}
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/create"
+              element={
+                <ProtectedRoute>
+                  <CreatePage />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route
-            path="/create"
-            element={
-              <ProtectedRoute>
-                <CreatePage />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="/notedetails/:id"
-            element={
-              <ProtectedRoute>
-                <NotesDetails />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="/notedetails/:id"
+              element={
+                <ProtectedRoute>
+                  <NotesDetails />
+                </ProtectedRoute>
+              }
+            />
 
-        </Routes>
+          </Routes>
+        </div>
       </div>
-    </div>
 
-}
-
-    
-
-   <ToastContainer 
+      <ToastContainer 
         position="top-right" 
         autoClose={3000} 
         hideProgressBar={false} 
@@ -99,7 +103,6 @@ function App() {
         draggable 
         pauseOnHover 
       />
-  
     </>
   );
 }

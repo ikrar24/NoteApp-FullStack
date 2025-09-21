@@ -11,13 +11,10 @@ import cookieParser from "cookie-parser";
 const app = express()
 
 // origin and cookie set 
-const corsOptions = {
-  origin: function (origin, callback) {
-    callback(null, true); 
-  },
-  credentials: true 
-};
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'http://localhost:3000', // frontend URL
+  credentials: true
+}));
 
 // Mongo DB Connection 
 connectDB()
