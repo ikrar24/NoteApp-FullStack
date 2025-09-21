@@ -1,12 +1,57 @@
-# React + Vite
+# 🎨 Frontend - Note App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **frontend** of the Note App, built with **React.js** and **Tailwind CSS**.  
+It interacts with the backend APIs for authentication, note management, and image uploads.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
+- User Authentication (Signup & Login pages)
+- Add, Edit, Delete Notes
+- Upload Images along with Notes
+- Zustand for global state management
+- Protected Routes using React Router DOM
+- Responsive UI with Tailwind CSS
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ⚙️ Installation
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+---
+
+## 📂 Project Structure
+```
+Frontend/
+│── public/              # Static assets
+│── src/
+│   ├── Components/      # Reusable components
+│   ├── Pages/           # All pages (Login, Signup, Notes, etc.)
+│   ├── Store/           # Zustand store
+│   ├── assets/          # Images and icons
+│   ├── App.jsx          # Main app file
+│   ├── main.jsx         # Entry point
+│── package.json
+```
+
+---
+
+## 🛠️ Tech Stack
+- React.js  
+- Tailwind CSS  
+- Zustand  
+- React Router DOM  
+
+---
+
+## 📸 Screenshots
+(Add UI screenshots here)
+
+---
+
+## 📄 License
+MIT License
