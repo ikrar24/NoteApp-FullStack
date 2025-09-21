@@ -31,6 +31,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
+
+// authToken check 
+app.get('/check-auth', (req, res) => {
+  const token = req.cookies.authToken; // httpOnly cookie read
+  if (!token) {
+    return res.json({ authenticated: false });
+  }
+
+ 
+  res.json({ authenticated: true });
+});
+
+
+// heath check 
 app.get("/" ,(req, res )=>{
     res.send("Hello World")
 })

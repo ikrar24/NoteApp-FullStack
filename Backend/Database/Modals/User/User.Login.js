@@ -34,7 +34,7 @@ const UserLogin = async (req, res) => {
 const isProduction = process.env.NODE_ENV === "production";
 
   res.cookie("authToken", jwtToken, {
-  httpOnly: false,
+  httpOnly: true,
   secure: false,
   sameSite: "lax",
   maxAge: 30 * 24 * 60 * 60 * 1000,
