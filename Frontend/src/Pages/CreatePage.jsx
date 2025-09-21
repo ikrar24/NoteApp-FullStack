@@ -9,7 +9,7 @@ function CreatePage() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [images, setImages] = useState([]) // react-images-uploading format
-  const [Loading, setLoading] = useState(false)
+  
 
   const maxNumber = 5
 
@@ -30,7 +30,7 @@ function CreatePage() {
       })
 
       setLoading(true)
-      const response = await fetch("http://localhost:8000/api/notes", {
+      const response = await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/notes", {
         method: "POST",
         credentials: "include",
         body: formData

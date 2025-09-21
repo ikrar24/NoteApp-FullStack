@@ -31,7 +31,7 @@ Note App/
 ## ⚙️ Installation
 Clone the repository:
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/ikrar24/NoteApp-FullStack/tree/main>
 cd "Note App"
 ```
 
@@ -69,8 +69,6 @@ npm run dev
 
 ---
 
-## 📸 Screenshots
-(You can add screenshots here)
 
 ---
 

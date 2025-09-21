@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import LoadingEffects from "../Components/LoadingEffects";
 
 function Login() {
   const inputStyle = "background-icons p-3 md:p-4 rounded-lg outline-none";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [Loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
   // handle login
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:8000/api/login", {
+      setLoading(true)
+      const res = await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -21,22 +25,27 @@ function Login() {
       });
 
       const data = await res.json();
-      console.log(data);
+     
       
       if (res.ok) {
-        alert("Login successful ✅");
+     console.log(data);
+     
+        toast.success(data.message);
         localStorage.setItem("token", data.token); // token save
-        navigate("/"); // redirect after login
+        setTimeout(() => navigate("/"), 500);
       } else {
-        alert(data.message || "Invalid credentials ❌");
+        toast.error(data.message)
       }
     } catch (error) {
       console.error(error);
-      alert("Server error, please try again later.");
+     toast.error(error)
+    }finally{
+      setLoading(false)
     }
   };
 
   return (
+    <>
     <section className="flex items-center justify-center w-screen h-screen">
       <div className="w-[90%] h-[50%] md:w-[50%]">
         <h1 className="text-center text-2xl font-semibold">Login</h1>
@@ -79,6 +88,8 @@ function Login() {
         </p>
       </div>
     </section>
+    {Loading && <LoadingEffects />}
+    </>
   );
 }
 

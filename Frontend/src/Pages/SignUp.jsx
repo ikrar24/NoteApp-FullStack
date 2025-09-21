@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import LoadingEffects from "../Components/LoadingEffects";
 
 function SignUp() {
   const inputStyle = "background-icons p-3 md:p-4 rounded-lg outline-none";
@@ -7,11 +9,13 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [Loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:8000/api/user", {
+      setLoading(true);
+      const res = await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,19 +29,21 @@ function SignUp() {
 
       const data = await res.json();
       if (res.ok) {
-        alert("Signup successful ✅");
+       toast.success(data.message)
         navigate("/login");
       } else {
-        alert(data.message || "Something went wrong ❌");
+        toast.error(data.message)
       }
     } catch (error) {
       console.error(error);
       alert("Server error, please try again later.");
+    }finally{
+      setLoading(false)
     }
   };
 
   return (
-    <section className="flex items-center justify-center w-screen h-screen">
+    <>    <section className="flex items-center justify-center w-screen h-screen">
       <div className="w-[90%] md:w-[50%] h-[50%]">
         <h1 className="text-center text-2xl font-semibold"> Sign Up First </h1>
 
@@ -82,7 +88,10 @@ function SignUp() {
           </Link>
         </p>
       </div>
+
     </section>
+      {Loading && <LoadingEffects />}
+    </>
   );
 }
 

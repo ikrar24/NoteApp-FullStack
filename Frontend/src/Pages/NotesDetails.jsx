@@ -35,7 +35,7 @@ function NotesDetails() {
     try {
       setLoading(true)
       const response = await fetch(
-        `http://localhost:8000/api/notes/${note._id}`,
+        `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -66,7 +66,7 @@ function NotesDetails() {
 const handleDeleteTotalNote = async () => {
   try {
     const response = await fetch(
-      `http://localhost:8000/api/notes/${note._id}`,
+      `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
       { method: "DELETE", credentials: "include" }
     );
 
@@ -91,7 +91,7 @@ const handleDeleteTotalNote = async () => {
     try {
       setLoading(true)
       const response = await fetch(
-        `http://localhost:8000/api/notes/${note._id}`,
+        `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

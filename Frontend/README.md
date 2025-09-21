@@ -48,8 +48,7 @@ Frontend/
 
 ---
 
-## 📸 Screenshots
-(Add UI screenshots here)
+
 
 ---
 
