@@ -12,11 +12,11 @@ const app = express()
 
 // origin and cookie set 
 const corsOptions = {
-  origin: true, // ya aapke frontend ka URL
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
+  origin: function (origin, callback) {
+    callback(null, true); 
+  },
+  credentials: true 
 };
-
 app.use(cors(corsOptions));
 
 // Mongo DB Connection 
@@ -28,7 +28,6 @@ const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors(corsOptions)); 
 app.use(cookieParser());
 
 
