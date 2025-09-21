@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.background{
+    background-color: #242424;
+}
+.background-icons{
+    background-color: #2c2b2b;
+}
+
+.body{
+background-color: #242424;
+}
+
+.background-loading{
+    background-color: rgba(32, 32, 32, 0.126);
+}
+
+
+/* global.css */
+.fullscreen-img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain !important;
+}
