@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 
 
 
+const app = express()
 
 // origin and cookie set 
 const isProduction = process.env.NODE_ENV === "production";
@@ -19,7 +20,6 @@ app.use(cors({
 connectDB()
 
 
-const app = express()
 const PORT = process.env.PORT || 8000;
 
 
