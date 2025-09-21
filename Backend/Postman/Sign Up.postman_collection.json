@@ -1,0 +1,48 @@
+{
+	"info": {
+		"_postman_id": "3b470493-c128-46d2-a829-14878652110b",
+		"name": "Sign Up",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41553983"
+	},
+	"item": [
+		{
+			"name": "Sign Up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fullName",
+							"value": "Ikrar",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "mdikrar@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "ikrar@123455",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				},
+				"description": "## User Registration API\n\nThis endpoint allows clients to register a new user by providing necessary details. It accepts a POST request to create a user account.\n\n### Endpoint\n\n`POST {{baseUrl}}/user`\n\n### Request Parameters\n\nThe request body should be sent as form-data and must include the following parameters:\n\n- **fullName** (text): The full name of the user. This field is required for user identification.\n    \n- **email** (text): The email address of the user. This must be a valid email format and is required for account verification.\n    \n- **password** (text): The password for the user account. This should meet the security requirements (e.g., minimum length, complexity).\n    \n\n### Expected Response\n\nOn a successful registration, the API will return a response with the following characteristics:\n\n- **Status Code**: 200\n    \n- **Content-Type**: text/xml\n    \n\nThe response will indicate that the user has been successfully created.\n\n### Additional Notes\n\n- Ensure that all fields are filled out correctly to avoid validation errors.\n    \n- The email address must be unique; if the email is already in use, the API may return an error.\n    \n- This endpoint is part of the user management system and is essential for onboarding new users.\n    \n\nThis endpoint allows you to create a new user by providing the necessary details in the request body.\n\n### Request\n\n**Method:** POST  \n**URL:** `{{baseUrl}}/user`\n\n#### Request Body (form-data)\n\n- **fullName** (text): The full name of the user to be created.\n    \n- **email** (text): The email address of the user. This should be a valid email format.\n    \n- **password** (text): The password for the user account. Ensure that it meets the security requirements.\n    \n\n### Response\n\n**Status Code:** 200  \n**Content-Type:** text/xml\n\nThe response will be in XML format, indicating the success of the user creation process.\n\n### Notes\n\n- Ensure that all required fields are provided in the request body.\n    \n- The email must be unique and not already associated with another user.\n    \n- Consider implementing error handling for cases where the user creation fails (e.g., duplicate email, weak password)."
+			},
+			"response": []
+		}
+	]
+}
