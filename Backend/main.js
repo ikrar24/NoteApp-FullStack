@@ -11,11 +11,14 @@ import cookieParser from "cookie-parser";
 const app = express()
 
 // origin and cookie set 
-const isProduction = process.env.NODE_ENV === "production";
-app.use(cors({
-  origin: isProduction ? "https://your-production-frontend.com" : "http://localhost:3000",
+const corsOptions = {
+  origin: true, // ya aapke frontend ka URL
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
+
 // Mongo DB Connection 
 connectDB()
 
