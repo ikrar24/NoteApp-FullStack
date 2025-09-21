@@ -7,14 +7,14 @@ import NoteRoutes from "./Database/Modals/Notes/noteRoutes.js"
 import cookieParser from "cookie-parser";
 
 
-// origin and cookie set 
-const corsOptions = {
-  origin: function (origin, callback) {
-    callback(null, true); 
-  },
-  credentials: true 
-};
 
+
+// origin and cookie set 
+const isProduction = process.env.NODE_ENV === "production";
+app.use(cors({
+  origin: isProduction ? "https://your-production-frontend.com" : "http://localhost:3000",
+  credentials: true,
+}));
 // Mongo DB Connection 
 connectDB()
 

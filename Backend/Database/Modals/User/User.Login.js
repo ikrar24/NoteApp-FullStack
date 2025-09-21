@@ -31,13 +31,14 @@ const UserLogin = async (req, res) => {
     );
 
    
-    res.cookie("authToken", jwtToken, {
-      httpOnly: true,  
-      secure: true,    
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      sameSite: 'lax'
-    })
+const isProduction = process.env.NODE_ENV === "production";
 
+  res.cookie("authToken", jwtToken, {
+  httpOnly: true,
+  secure: isProduction, // HTTPS only in production
+  sameSite: isProduction ? "none" : "lax",
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+});
 
 
  

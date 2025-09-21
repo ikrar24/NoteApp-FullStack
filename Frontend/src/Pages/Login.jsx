@@ -17,11 +17,11 @@ function Login() {
       setLoading(true)
       const res = await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/login", {
         method: "POST",
+        credentials: "include", // include cookies in the request
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-         credentials: "include", // include cookies in the request
       });
 
       const data = await res.json();

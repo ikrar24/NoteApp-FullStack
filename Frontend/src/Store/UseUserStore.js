@@ -15,9 +15,7 @@ const useUserStore = create((set) => ({
       });
 
       const data = await res.json();
-      // console.log("API Response:", data);
-
-      // yahan direct set karo
+      
       set({
         users: data.users || data, // agar response { users: [...] } hai to data.users lo
         loading: false,
