@@ -34,10 +34,10 @@ const isProduction = process.env.NODE_ENV === "production";
 
 res.cookie("authToken", jwtToken, {
   httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "none" : "lax",
-  domain: isProduction ? ".onrender.com" : "localhost",
-  maxAge: 30 * 24 * 60 * 60 * 1000,
+  secure: isProduction,             // https only in production
+  sameSite: isProduction ? "none" : "lax", // cross-site allowed in prod
+  // ❌ domain hata do
+  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
 });
 
 
