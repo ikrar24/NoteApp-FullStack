@@ -30,15 +30,15 @@ const UserLogin = async (req, res) => {
       { expiresIn: "30d" }
     );
 
-   
-const isProduction = process.env.NODE_ENV === "production";
+ const isProduction = process.env.NODE_ENV === "production";
 
-  res.cookie("authToken", jwtToken, {
+res.cookie("authToken", jwtToken, {
   httpOnly: true,
-  secure: false,
-  sameSite: "lax",
+  secure: isProduction, // ✅ HTTPS par true hona chahiye
+  sameSite: isProduction ? "none" : "lax", // ✅ cross-site ke liye "none"
   maxAge: 30 * 24 * 60 * 60 * 1000,
 });
+
 
 
  
