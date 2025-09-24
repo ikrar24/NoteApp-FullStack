@@ -7,30 +7,23 @@ const ProtectedRoute = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch('https://noteapp-fullstack-6ksr.onrender.com/check-auth', {
-          credentials: 'include',
-        });
+    const checkAuth = () => {
+      // localStorage me token check karo
+      const token = localStorage.getItem("authToken");
 
-        if (!res.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await res.json();
-        setAuthenticated(data.authenticated);
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        setAuthenticated(false); // error hua toh login page bhej do
-      } finally {
-        setLoading(false); // fetch complete hone ke baad loading false
+      if (token) {
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
       }
+
+      setLoading(false);
     };
 
     checkAuth();
   }, []);
 
-  if (loading) return <LoadingEffects/>;
+  if (loading) return <LoadingEffects />;
 
   if (!authenticated) return <Navigate to="/login" />;
 

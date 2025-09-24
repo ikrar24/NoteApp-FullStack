@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import useUserStore from "../Store/UseUserStore.js";
 import { toast } from "react-toastify";
 import LoadingEffects from "../Components/LoadingEffects.jsx";
+import { GetToken } from "../Store/GetAuthToken.js";
 
 function NotesDetails() {
   const location = useLocation();
@@ -67,7 +68,9 @@ const handleDeleteTotalNote = async () => {
   try {
     const response = await fetch(
       `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
-      { method: "DELETE", credentials: "include" }
+      { method: "DELETE", 
+        credentials: "include" , 
+        body: {authToken: GetToken} , }
     );
 
     const data = await response.json();

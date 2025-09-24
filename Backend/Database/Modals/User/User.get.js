@@ -5,8 +5,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const GetUser = async (req, res) => {
+  const { authToken } = req.body;
   try {
-    const token = req.cookies.authToken; // ✅ fixed
+    const token = req.cookies.authToken || authToken ; // ✅ fixed
 
     if (!token) {
       return res.status(401).json({ message: "Token missing" });

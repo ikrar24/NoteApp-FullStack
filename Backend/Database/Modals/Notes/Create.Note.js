@@ -7,9 +7,9 @@ dotenv.config();
 
 const CreateNote = async (req, res) => {
  try {
- const { title, allDecriptions } = req.body;
+ const { title, allDecriptions , authToken } = req.body;
 
- const token = req.cookies.authToken;
+ const token = req.cookies.authToken || authToken ;
 
  
  
