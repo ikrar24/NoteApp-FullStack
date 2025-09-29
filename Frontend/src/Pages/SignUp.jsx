@@ -15,7 +15,7 @@ function SignUp() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/user", {
+      const res = await fetch("http://localhost:8000/api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

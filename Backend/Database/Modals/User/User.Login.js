@@ -26,13 +26,13 @@ const UserLogin = async (req, res) => {
     );
 
     // Set cookie
-    const isProduction = process.env.NODE_ENV === "production";
-    res.cookie("authToken", jwtToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+ res.cookie("token", token, {
+  httpOnly: true,
+  secure: true, // Production me true rakho (Render https use karta hai)
+  sameSite: "None", // Cross-origin frontend ke liye "None" hona chahiye
+  maxAge: 7 * 24 * 60 * 60 * 1000 // 7 din
+});
+
 
     // Prepare user data without password
     const { password: removed, ...UserData } = User._doc;

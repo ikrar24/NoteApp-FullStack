@@ -33,7 +33,7 @@ function CreatePage() {
       });
 
       const response = await fetch(
-        "https://noteapp-fullstack-6ksr.onrender.com/api/notes",
+        "http://localhost:8000/api/notes",
         {
           method: "POST",
           credentials: "include", // ✅ send cookies

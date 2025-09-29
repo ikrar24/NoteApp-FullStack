@@ -10,7 +10,7 @@ const useUserStore = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      const res = await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/user", {
+      const res = await fetch("http://localhost:8000/api/user", {
         credentials: "include",
       });
 

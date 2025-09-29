@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingEffects from "../Components/LoadingEffects";
+import { GetToken } from "../Store/GetAuthToken";
 
 function Login() {
   const inputStyle = "background-icons p-3 md:p-4 rounded-lg outline-none";
@@ -17,7 +18,7 @@ function Login() {
       setLoading(true);
 
       const res = await fetch(
-        "https://noteapp-fullstack-6ksr.onrender.com/api/login",
+        "http://localhost:8000/api/login",
         {
           method: "POST",
           credentials: "include", // ✅ cookies backend se automatically include
