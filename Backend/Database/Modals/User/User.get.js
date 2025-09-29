@@ -21,7 +21,13 @@ const GetUser = async (req, res) => {
     
     
     
-    const findUser = await UseSchema.findById(userID).select("-password").populate("notes");
+   const findUser = await UseSchema.findById(userID)
+  .select("-password")
+  .populate({
+    path: "notes",
+    options: { sort: { createdAt: -1 } } // latest note first
+  });
+
 
 
     // console.log("Updated User with Notes:", findUser);

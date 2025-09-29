@@ -12,8 +12,11 @@ const app = express()
 
 // origin and cookie set 
 app.use(cors({
-  origin: ["http://localhost:3000", "https://your-frontend.onrender.com"], // frontend URLs
-  credentials: true,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // Postman / server request allow
+    callback(null, origin); // dynamically set incoming origin
+  },
+  credentials: true
 }));
 
 // Mongo DB Connection 

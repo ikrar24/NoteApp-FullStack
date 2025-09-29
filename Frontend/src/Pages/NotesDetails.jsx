@@ -18,82 +18,89 @@ function NotesDetails() {
   const [ToggleImage, setToggleImage] = useState(false);
   const [fullscreenImg, setFullscreenImg] = useState(null);
 
-  // Local note state to keep it reactive
   const [note, setNote] = useState(initialNote);
   const [title, setTitle] = useState(initialNote.title);
   const [content, setContent] = useState(initialNote.allDecriptions);
-
   const [TotalImages, setTotalImages] = useState(initialNote?.image || []);
-  const [Loading, setLoading] = useState(false)
+  const [Loading, setLoading] = useState(false);
 
-  // Zustand Updates
-  const deleteUserFromStore = useUserStore(
-    (state) => state.deleteUserFromStore
-  );
+  // Zustand store methods
+  const updateNoteInStore = useUserStore((state) => state.updateNoteInUser);
+  const deleteNoteFromStore = useUserStore((state) => state.deleteNoteFromUser);
 
-  // Save function
-  const handleSave = async () => {
-    try {
-      setLoading(true)
-      const response = await fetch(
-        `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ title, allDecriptions: content }),
-        }
-      );
-
-      const data = await response.json();
-      toast.success(data.message)
-      setNote((prev) => ({ ...prev, ...data })); // update local note state
-      setEdits(false);
-
-      // Update location.state as well
-      navigate(location.pathname, {
-        state: { ...location.state, note: { ...note, ...data } },
-        replace: true,
-      });
-    } catch (error) {
-      // console.error("Error updating note:", error);
-      toast.error(error)
-    }finally{
-      setLoading(false)
-    }
-  };
-
-  // Hare delete total Notes
-const handleDeleteTotalNote = async () => {
+  // Save note
+const handleSave = async () => {
   try {
+    setLoading(true);
+
     const response = await fetch(
       `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
-      { method: "DELETE", 
-        credentials: "include" , 
-        body: {authToken: GetToken} , }
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ title, allDecriptions: content }),
+      }
     );
 
     const data = await response.json();
+    toast.success(data.message);
 
+    // ✅ Create fully updated note object
+    const updatedNote = {
+      ...note,      // previous note
+      title: data.title || title,
+      allDecriptions: data.allDecriptions || content,
+      image: data.image || note.image, // if backend returns image
+    };
 
-    // ✅ Remove note from Zustand store
-    deleteUserFromStore(note._id);
+    // ✅ Update local state
+    setNote(updatedNote);
 
-    // ✅ Navigate home
-    window.location = "/";
-  } catch (error) {
-   
-    toast.error(error)
-  }finally{
-    setLoading(false)
+    // ✅ Update Zustand store
+    updateNoteInStore(updatedNote);
+
+    setEdits(false);
+  } catch (err) {
+    toast.error(err.message || "Error updating note");
+  } finally {
+    setLoading(false);
   }
 };
 
-  // Delete image
-  const handleDelete = async (fileName) => {
+
+
+  // Delete entire note
+  const handleDeleteTotalNote = async () => {
     try {
-      setLoading(true)
-      const response = await fetch(
+      setLoading(true);
+      const res = await fetch(
+        `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ authToken: GetToken }),
+        }
+      );
+      const data = await res.json();
+      toast.success(data.message);
+
+      deleteNoteFromStore(note._id);
+
+      navigate("/", { replace: true });
+    } catch (err) {
+      toast.error(err.message || "Error deleting note");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete single image
+  const handleDeleteImage = async (fileName) => {
+    try {
+      setLoading(true);
+      const res = await fetch(
         `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
         {
           method: "PUT",
@@ -102,41 +109,35 @@ const handleDeleteTotalNote = async () => {
           body: JSON.stringify({ filename: fileName }),
         }
       );
+      const data = await res.json();
+      toast.success(data.message);
 
-      const data = await response.json();
-      // Update images locally
-      toast.success(data.message)
-      const updatedImages = TotalImages.filter(
-        (img) => img.fileName !== fileName
-      );
+      const updatedImages = TotalImages.filter((img) => img.fileName !== fileName);
       setTotalImages(updatedImages);
 
-      // Update local note state
-      setNote((prev) => ({ ...prev, image: updatedImages }));
+      const updatedNoteWithImages = { ...note, image: updatedImages };
+      setNote(updatedNoteWithImages);
+      updateNoteInStore(updatedNoteWithImages);
 
-      // Update location.state as well
       navigate(location.pathname, {
-        state: { ...location.state, note: { ...note, image: updatedImages } },
+        state: { ...location.state, note: updatedNoteWithImages },
         replace: true,
       });
-
-      
-    } catch (error) {
-      toast.success(error)
-    }finally{
+    } catch (err) {
+      toast.error(err.message || "Error deleting image");
+    } finally {
       setEdits(false);
+      setLoading(false);
     }
   };
 
   return (
     <>
-      {/* Navbar */}
       <nav className="mt-5 ml-6 flex items-center justify-between w-[90vw]">
         <ul className="w-fit">
           <li className="background-icons text-3xl rounded-xl p-2 w-fit cursor-pointer">
             <Link onClick={() => navigate(-1)}>
-              {" "}
-              <IoIosArrowBack />{" "}
+              <IoIosArrowBack />
             </Link>
           </li>
         </ul>
@@ -158,7 +159,7 @@ const handleDeleteTotalNote = async () => {
           </li>
 
           <li
-            className={` ${
+            className={`${
               Edits ? "flex" : "hidden"
             } background-icons text-3xl rounded-xl p-3 w-fit cursor-pointer`}
           >
@@ -167,7 +168,6 @@ const handleDeleteTotalNote = async () => {
         </ul>
       </nav>
 
-      {/* Note Details */}
       <main className="w-screen p-5">
         {Edits ? (
           <>
@@ -191,10 +191,9 @@ const handleDeleteTotalNote = async () => {
         )}
       </main>
 
-      {/* Images Section */}
       {ToggleImage && (
         <div className="fixed inset-0 flex flex-col items-center justify-start p-5 overflow-y-scroll scrollbar-hide backdrop-blur-sm gap-5">
-          <div className="relative rounded-lg background-icons p-3 ">
+          <div className="relative rounded-lg background-icons p-3">
             <RxCross2
               className="text-2xl font-bold cursor-pointer"
               onClick={() => setToggleImage(false)}
@@ -222,7 +221,7 @@ const handleDeleteTotalNote = async () => {
                       <div className="absolute top-0 left-0 h-full w-full p-1 z-[10] flex items-center justify-center cursor-pointer backdrop-blur-sm">
                         <MdDelete
                           className="text-black text-4xl"
-                          onClick={() => handleDelete(img.fileName)}
+                          onClick={() => handleDeleteImage(img.fileName)}
                         />
                       </div>
                     )}
@@ -235,13 +234,12 @@ const handleDeleteTotalNote = async () => {
         </div>
       )}
 
-      {/* Fullscreen overlay */}
       {fullscreenImg && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
           <img
             src={fullscreenImg}
             alt="fullscreen"
-            className="max-h-[90%] max-w-[90%] object-contain "
+            className="max-h-[90%] max-w-[90%] object-contain"
           />
           <button
             className="absolute top-5 right-5 text-white text-2xl p-2 bg-red-500 rounded"
@@ -251,6 +249,7 @@ const handleDeleteTotalNote = async () => {
           </button>
         </div>
       )}
+
       {Loading && <LoadingEffects />}
     </>
   );

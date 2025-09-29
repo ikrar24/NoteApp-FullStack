@@ -6,6 +6,7 @@ import ImageUploading from "react-images-uploading";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { GetToken } from "../Store/GetAuthToken";
+import useUserStore from "../Store/UseUserStore";
 
 function CreatePage() {
   const [title, setTitle] = useState("");
@@ -15,6 +16,10 @@ function CreatePage() {
   const maxNumber = 5;
   const navigate = useNavigate();
 
+  const addNoteToUser = useUserStore((state) => state.addNoteToUser);
+ 
+ 
+ 
   const handleSave = async () => {
     if (!title && !content && images.length === 0) {
       toast.warn("Please add something before saving!");
@@ -49,6 +54,10 @@ function CreatePage() {
       const data = await response.json();
       console.log("Note saved:", data);
       toast.success(data.message);
+        if (data.note) {
+        addNoteToUser(data.note);
+      }
+
 
       // Reset form
       setTitle("");
