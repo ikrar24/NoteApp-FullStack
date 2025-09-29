@@ -32,7 +32,7 @@ function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        console.log("Login success data:", data);
+       
 
         // ✅ Store token in localStorage (frontend use)
         localStorage.setItem("authToken", data.authToken);

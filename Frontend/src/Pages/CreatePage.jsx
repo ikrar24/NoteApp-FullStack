@@ -52,7 +52,7 @@ function CreatePage() {
       }
 
       const data = await response.json();
-      console.log("Note saved:", data);
+     
       toast.success(data.message);
         if (data.note) {
         addNoteToUser(data.note);
