@@ -18,7 +18,7 @@ function Login() {
       setLoading(true);
 
       const res = await fetch(
-        "http://localhost:8000/api/login",
+        "https://noteapp-fullstack-6ksr.onrender.com/api/login",
         {
           method: "POST",
           credentials: "include", // ✅ cookies backend se automatically include

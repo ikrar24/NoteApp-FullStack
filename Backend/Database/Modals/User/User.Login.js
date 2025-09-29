@@ -26,12 +26,15 @@ const UserLogin = async (req, res) => {
     );
 
     // Set cookie
- res.cookie("token", token, {
+res.cookie("authToken", jwtToken, {
   httpOnly: true,
   secure: true, // Production me true rakho (Render https use karta hai)
   sameSite: "None", // Cross-origin frontend ke liye "None" hona chahiye
   maxAge: 7 * 24 * 60 * 60 * 1000 // 7 din
 });
+
+
+
 
 
     // Prepare user data without password
