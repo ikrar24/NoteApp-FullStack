@@ -4,9 +4,10 @@ import SearchBar from "./SearchBar";
 function Navbar() {
 
   const [toggleSearch, setToggleSearch] = useState(false)
-
+  const [SearchFoucs, setSearchFoucs] = useState(false)
 const handleSearch = ()=>{
   setToggleSearch((prev)=>!prev)
+  setSearchFoucs((prev)=>!prev)
 }
 
   return (
@@ -40,7 +41,7 @@ const handleSearch = ()=>{
     
     
       <div className={`  w-screen ${toggleSearch?"flex":"hidden"} items-center justify-center mt-6  `} >
-<SearchBar />
+<SearchBar SearchFoucs={SearchFoucs} />
     </div>
     </>
   );
