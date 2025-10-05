@@ -92,7 +92,7 @@ function SignUp() {
               className="p-3 rounded-lg outline-none bg-white text-black text-xl"
               type="submit"
             >
-           
+              {loading ? <SyncLoader /> : "Sign Up"}
             </button>
           </form>
 

@@ -131,7 +131,7 @@ function Login() {
               type="submit"
               disabled={loading} // disable button while loading
             >
-              {loading ? "Logging in..." : "Login"}
+             
             </button>
           </form>
 
