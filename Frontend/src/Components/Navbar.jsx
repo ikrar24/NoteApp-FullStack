@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { FaSearch, FaPlus, FaTimes } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import SearchBar from "./SearchBar";
-import { useNavigate } from "react-router-dom"
+import { data, useNavigate } from "react-router-dom"
+import  { toast } from "react-toastify"
+import LoadingEffects from "./LoadingEffects";
 function Navbar() {
   const [toggleSearch, setToggleSearch] = useState(false);
   const [SearchFoucs, setSearchFoucs] = useState(false);
+const [Loading, setLoading] = useState(false)
 
 // config navigation 
 const navigate = useNavigate();
@@ -19,10 +22,40 @@ const navigate = useNavigate();
 
 // Logout 
 const handleLogOute = async ()=>{
-   await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/user/logout", {
+
+
+  try {
+    
+setLoading(true)
+ const reqLogOut =  await fetch("https://noteapp-fullstack-6ksr.onrender.com/api/user/logout", {
     method: "POST",
     credentials: "include" 
   });
+
+  const DataLogOut = reqLogOut.json()
+
+ 
+
+if (reqLogOut.ok) {
+   localStorage.removeItem("authToken");
+
+toast.success(DataLogOut.message)
+
+
+} else {
+  toast.error(DataLogOut.message)
+  
+}
+
+
+  } catch (error) {
+    toast.error(error)
+  }finally{
+    setLoading(false)
+  }
+
+
+
 
   // Redirect ya UI update
   navigate("/login")
@@ -68,6 +101,7 @@ const handleLogOute = async ()=>{
       >
         <SearchBar SearchFoucs={SearchFoucs} />
       </div>
+      {Loading && <LoadingEffects/>}
     </>
   );
 }

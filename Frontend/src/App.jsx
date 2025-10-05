@@ -15,18 +15,19 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-
   const location = useLocation();
+  const hideLayout = location.pathname === "/create";
+
   const { fetchUsers, users } = useUserStore();
   const [authenticated, setAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
-  // Check auth
+  // ✅ Check auth from localStorage
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
       setAuthenticated(true);
-      fetchUsers();
+      fetchUsers(); // Fetch users only if authenticated
     } else {
       setAuthenticated(false);
     }
@@ -34,8 +35,6 @@ function App() {
   }, [fetchUsers]);
 
   if (checkingAuth) return <LoadingEffects />;
-
-  const isHomePage = location.pathname === "/";
 
   return (
     <>
@@ -49,13 +48,13 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  {isHomePage && <Navbar />}
-                  {authenticated && isHomePage && users?.user?.notes?.length === 0 ? (
+                  {!hideLayout && <Navbar />}
+                  {authenticated && users?.user?.notes?.length === 0 && !hideLayout ? (
                     <HaveNotNotes />
                   ) : (
-                    isHomePage && <TotalNotes />
+                    !hideLayout && <TotalNotes />
                   )}
-                  {isHomePage && <PlusIcon />}
+                  {!hideLayout && <PlusIcon />}
                 </ProtectedRoute>
               }
             />
@@ -95,4 +94,5 @@ function App() {
     </>
   );
 }
+
 export default App;
