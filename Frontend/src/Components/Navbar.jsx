@@ -37,8 +37,7 @@ setLoading(true)
  
 
 if (reqLogOut.ok) {
-   localStorage.removeItem("authToken");
-
+ 
 toast.success(DataLogOut.message)
 
 

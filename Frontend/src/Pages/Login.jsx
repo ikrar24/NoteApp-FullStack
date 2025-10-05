@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingEffects from "../Components/LoadingEffects";
 import { GetToken } from "../Store/GetAuthToken";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const inputStyle = "background-icons p-3 md:p-4 rounded-lg outline-none";
@@ -10,8 +11,31 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const passwordInput = useRef(null);
 
-  // handle login
+  const [showPassword, setShowPassword] = useState(false);
+
+
+  // handle password 
+  const togglePassword = () => {
+    if (passwordInput.current) {
+      // type toggle
+      passwordInput.current.type = showPassword ? "password" : "text";
+
+   
+      
+      setShowPassword(!showPassword);
+    }
+  };
+
+
+
+ 
+
+
+
+
+// handle login
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -55,6 +79,8 @@ function Login() {
     }
   };
 
+
+
   return (
     <>
       <section className="flex items-center justify-center w-screen h-screen">
@@ -71,15 +97,35 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+
+            <div className=" relative " >
+
+            
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className={inputStyle}
+              className={`${inputStyle} w-full `}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-            />
+              ref={passwordInput}
+              
+            /> 
 
+{/* toggle type of password  */}
+
+        {showPassword ? (
+        <FaEye
+          className="absolute right-4 bottom-[30%] cursor-pointer"
+          onClick={togglePassword}
+        />
+      ) : (
+        <FaEyeSlash
+          className="absolute right-4 bottom-[30%] cursor-pointer"
+          onClick={togglePassword}
+        />
+      )}
+</div>
             <button
               className="p-3 rounded-lg outline-none bg-white text-black text-xl"
               type="submit"

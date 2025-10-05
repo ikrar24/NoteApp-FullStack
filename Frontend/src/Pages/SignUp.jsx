@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingEffects from "../Components/LoadingEffects";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { SyncLoader } from "react-spinners";
 
 function SignUp() {
   const inputStyle = "background-icons p-3 md:p-4 rounded-lg outline-none";
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [Loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,77 +23,89 @@ function SignUp() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          fullName,
-          email,
-          password,
-        }),
+        body: JSON.stringify({ fullName, email, password }),
       });
 
       const data = await res.json();
       if (res.ok) {
-       toast.success(data.message)
+        toast.success(data.message);
         navigate("/login");
       } else {
-        toast.error(data.message)
+        toast.error(data.message);
       }
     } catch (error) {
       console.error(error);
       alert("Server error, please try again later.");
-    }finally{
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>    <section className="flex items-center justify-center w-screen h-screen">
-      <div className="w-[90%] md:w-[50%] h-[50%]">
-        <h1 className="text-center text-2xl font-semibold"> Sign Up First </h1>
+    <>
+      <section className="flex items-center justify-center w-screen h-screen">
+        <div className="w-[90%] md:w-[50%] h-[50%]">
+          <h1 className="text-center text-2xl font-semibold">Sign Up First</h1>
 
-        <form className="flex flex-col gap-5 mt-7" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder=" Name "
-            className={inputStyle}
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-          <input
-            type="email"
-            placeholder=" Email "
-            className={inputStyle}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className={inputStyle}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <form className="flex flex-col gap-5 mt-7" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Name"
+              className={inputStyle}
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              className={inputStyle}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-          <button
-            className="p-3 rounded-lg outline-none bg-white text-black text-xl"
-            type="submit"
-          >
-            Sign Up
-          </button>
-        </form>
+            {/* Password Field with toggle */}
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className={`${inputStyle} w-full`}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              {showPassword ? (
+                <FaEye
+                  className="absolute right-4 bottom-[30%] cursor-pointer"
+                  onClick={() => setShowPassword(false)}
+                />
+              ) : (
+                <FaEyeSlash
+                  className="absolute right-4 bottom-[30%] cursor-pointer"
+                  onClick={() => setShowPassword(true)}
+                />
+              )}
+            </div>
 
-        <p className="text-center mt-3 text-gray-700">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 underline">
-            Login
-          </Link>
-        </p>
-      </div>
+            <button
+              className="p-3 rounded-lg outline-none bg-white text-black text-xl"
+              type="submit"
+            >
+           
+            </button>
+          </form>
 
-    </section>
-      {Loading && <LoadingEffects />}
+          <p className="text-center mt-3 text-gray-700">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-600 underline">
+              Login
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      {loading && <LoadingEffects />}
     </>
   );
 }
