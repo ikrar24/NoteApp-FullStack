@@ -4,7 +4,7 @@ import { FaRegSave } from "react-icons/fa";
 import LoadingEffects from "../Components/LoadingEffects";
 import ImageUploading from "react-images-uploading";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GetToken } from "../Store/GetAuthToken";
 import useUserStore from "../Store/UseUserStore";
 
@@ -81,7 +81,7 @@ function CreatePage() {
         <nav className="mt-5 ml-6 flex items-center justify-between w-[90vw]">
           <ul className="w-fit">
             <li className="background-icons text-3xl rounded-xl p-2 w-fit cursor-pointer">
-              <a href="/"> <IoIosArrowBack /> </a>
+              <Link to="/" > <IoIosArrowBack /> </Link>
             </li>
           </ul>
 
