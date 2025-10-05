@@ -136,7 +136,7 @@ const handleSave = async () => {
       <nav className="mt-5 ml-6 flex items-center justify-between w-[90vw]">
         <ul className="w-fit">
           <li className="background-icons text-3xl rounded-xl p-2 w-fit cursor-pointer">
-            <Link onClick={() => navigate(-1)}>
+            <Link to="/">
               <IoIosArrowBack />
             </Link>
           </li>
