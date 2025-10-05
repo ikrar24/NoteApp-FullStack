@@ -7,17 +7,30 @@ const ProtectedRoute = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuth = () => {
-      // localStorage me token check karo
-      const token = localStorage.getItem("authToken");
+    const checkAuth = async () => {
+      try {
+        // Backend se auth check karo
+        const response = await fetch("https://noteapp-fullstack-6ksr.onrender.com/check-auth", {
+          method: "GET",
+          credentials: "include", // cookies send karne ke liye
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-      if (token) {
-        setAuthenticated(true);
-      } else {
+        const data = await response.json();
+
+        if (response.ok && data.authenticated) {
+          setAuthenticated(true);
+        } else {
+          setAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
         setAuthenticated(false);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     checkAuth();
