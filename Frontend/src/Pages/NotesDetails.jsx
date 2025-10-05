@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaRegSave, FaPencilAlt } from "react-icons/fa";
 import { IoIosArrowBack, IoMdImages } from "react-icons/io";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import { MdDelete } from "react-icons/md";
 import useUserStore from "../Store/UseUserStore.js";
@@ -14,13 +14,18 @@ function NotesDetails() {
   const navigate = useNavigate();
   const { note: initialNote } = location.state || {};
 
+  // Redirect if no note provided
+  useEffect(() => {
+    if (!initialNote) navigate("/", { replace: true });
+  }, [initialNote, navigate]);
+
   const [Edits, setEdits] = useState(false);
   const [ToggleImage, setToggleImage] = useState(false);
   const [fullscreenImg, setFullscreenImg] = useState(null);
 
-  const [note, setNote] = useState(initialNote);
-  const [title, setTitle] = useState(initialNote.title);
-  const [content, setContent] = useState(initialNote.allDecriptions);
+  const [note, setNote] = useState(initialNote || {});
+  const [title, setTitle] = useState(initialNote?.title || "");
+  const [content, setContent] = useState(initialNote?.allDecriptions || "");
   const [TotalImages, setTotalImages] = useState(initialNote?.image || []);
   const [Loading, setLoading] = useState(false);
 
@@ -29,46 +34,39 @@ function NotesDetails() {
   const deleteNoteFromStore = useUserStore((state) => state.deleteNoteFromUser);
 
   // Save note
-const handleSave = async () => {
-  try {
-    setLoading(true);
+  const handleSave = async () => {
+    try {
+      setLoading(true);
 
-    const response = await fetch(
-      `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ title, allDecriptions: content }),
-      }
-    );
+      const response = await fetch(
+        `https://noteapp-fullstack-6ksr.onrender.com/api/notes/${note._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ title, allDecriptions: content }),
+        }
+      );
 
-    const data = await response.json();
-    toast.success(data.message);
+      const data = await response.json();
+      toast.success(data.message);
 
-    // ✅ Create fully updated note object
-    const updatedNote = {
-      ...note,      // previous note
-      title: data.title || title,
-      allDecriptions: data.allDecriptions || content,
-      image: data.image || note.image, // if backend returns image
-    };
+      const updatedNote = {
+        ...note,
+        title: data.title || title,
+        allDecriptions: data.allDecriptions || content,
+        image: data.image || note.image,
+      };
 
-    // ✅ Update local state
-    setNote(updatedNote);
-
-    // ✅ Update Zustand store
-    updateNoteInStore(updatedNote);
-
-    setEdits(false);
-  } catch (err) {
-    toast.error(err.message || "Error updating note");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+      setNote(updatedNote);
+      updateNoteInStore(updatedNote);
+      setEdits(false);
+    } catch (err) {
+      toast.error(err.message || "Error updating note");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Delete entire note
   const handleDeleteTotalNote = async () => {
@@ -131,14 +129,19 @@ const handleSave = async () => {
     }
   };
 
+  // Back navigation with overlay cleanup
+  const handleBack = () => {
+    setToggleImage(false);
+    setFullscreenImg(null);
+    setTimeout(() => navigate(-1), 50); // slight delay for smooth transition
+  };
+
   return (
     <>
       <nav className="mt-5 ml-6 flex items-center justify-between w-[90vw]">
         <ul className="w-fit">
           <li className="background-icons text-3xl rounded-xl p-2 w-fit cursor-pointer">
-            <Link onClick={() => navigate(-1)}>
-              <IoIosArrowBack />
-            </Link>
+            <IoIosArrowBack onClick={handleBack} />
           </li>
         </ul>
 
